@@ -7,10 +7,11 @@
  *
  */
 
+use PHPUnit\Framework\TestCase;
 require_once(__DIR__ . "/../autoload.php");
 
 
-class ParserTest extends PHPUnit_Framework_TestCase
+class ParserTest extends TestCase
 {
     protected function setUp()
     {
@@ -24,9 +25,6 @@ class ParserTest extends PHPUnit_Framework_TestCase
         return isset(Board0x88Config::$mapping[$square]) ? Board0x88Config::$mapping[$square] : null;
     }
 
-    /**
-     * @test
-     */
     /**
      * @test
      */
@@ -177,6 +175,8 @@ Rc8 Ne6+ 72. Kf6 d2 73. c5+ Kd7 0-1';
         $parser = new PgnParser();
         $parser->setPgnContent($pgn);
         $game = $parser->getFirstGame();
+
+        $this->assertEquals((73 * 2), count($game['moves']));
     }
 
 
@@ -203,8 +203,9 @@ Rc8 Ne6+ 72. Kf6 d2 73. c5+ Kd7 0-1';
 1. a3+';
         $pgnParser = new PgnParser();
         $pgnParser->setPgnContent($game);
-        $pgnParser->getFirstGame();
+        $game = $pgnParser->getFirstGame();
 
+        $this->assertEquals(1, count($game['moves']));
     }
 
     /**
@@ -1736,7 +1737,7 @@ Rc8 Ne6+ 72. Kf6 d2 73. c5+ Kd7 0-1';
             }
             $parser->move($moves[$i]);
             $notation = $parser->getLongNotation();
-            $this->assertEquals($expected[$i], $expected[$i], $notation);
+            $this->assertEquals($expected[$i], $expected[$i], $notation === null ? "<NULL>" : $notation);
         }
 
     }
@@ -2037,6 +2038,8 @@ Rc8 Ne6+ 72. Kf6 d2 73. c5+ Kd7 0-1';
         $pgnParser = new PgnParser("pgn/CURIO.pgn");
 
         $games = $pgnParser->getGames();
+
+        $this->assertEquals(1, count($games));
     }
 
     /**
@@ -2052,7 +2055,7 @@ Rc8 Ne6+ 72. Kf6 d2 73. c5+ Kd7 0-1';
         $game = $pgnParser->getGameByIndex(0);
 
         // then
-        $this->assertNotEmpty($game['white'], $game);
+        $this->assertNotEmpty($game['white']);
         $this->assertNotEmpty($game['moves'][0]);
         $m = json_encode($game['moves'][0]);
         $this->assertNotEmpty($game['moves'][0]['clk'], "Move: " . $m);
@@ -2337,8 +2340,9 @@ Rc8 Ne6+ 72. Kf6 d2 73. c5+ Kd7 0-1';
         $pgnParser = new PgnParser("pgn/art_attack.pgn");
 
         // when
-        $game = $pgnParser->getGames();
+        $games = $pgnParser->getGames();
 
+        $this->assertEquals(1, count($games));
     }
 
     /**

@@ -7,9 +7,10 @@
  * Time: 19:01
  */
 
+use PHPUnit\Framework\TestCase;
 require_once(__DIR__ . "/../autoload.php");
 
-class JSONToPgnTest extends PHPUnit_Framework_TestCase
+class JSONToPgnTest extends TestCase
 {
     /**
      * @test
